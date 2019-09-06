@@ -12,7 +12,7 @@ export class PostsComponent implements OnInit {
   posts: Post[];
   
   constructor(private postService:PostService) { }
-
+  
   ngOnInit() {
 
     this.postService.getPosts().subscribe(posts => {
@@ -20,6 +20,10 @@ export class PostsComponent implements OnInit {
         
     });
 
+  }
+  toBeAddedPost(post:Post):void{
+      console.log(post);
+      this.posts.unshift(post);
   }
 
 }

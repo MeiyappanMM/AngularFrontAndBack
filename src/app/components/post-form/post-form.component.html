@@ -3,12 +3,12 @@
     <form>
         <div class="form-group">
             <label>Title</label>
-            <input type="text" class="form-control" name='title'>
+            <input type="text" class="form-control" name='title' #title>
         </div>
         <div class="form-group">
                 <label>Body</label>
-                <input type="text" class="form-control" name='body'>
+                <input type="text" class="form-control" name='body' #body>
         </div>
-        <button class="btn btn-dark btn-block">Add Post</button>
+        <button class="btn btn-dark btn-block" (click)="addPost(title.value,body.value)" >Add Post</button>
     </form>
 </div>

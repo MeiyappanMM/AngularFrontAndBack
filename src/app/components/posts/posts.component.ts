@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Post } from '../../models/Post'; 
+import { Post } from '../../models/Post';
 import { PostService } from '../../services/post.service';
 
 @Component({
@@ -10,20 +10,57 @@ import { PostService } from '../../services/post.service';
 export class PostsComponent implements OnInit {
 
   posts: Post[];
-  
-  constructor(private postService:PostService) { }
-  
+  currentPost: Post = {
+    id: 0,
+    title: '',
+    body: ''
+  };
+  isEdit: boolean = false;
+  constructor(private postService: PostService) { }
+
   ngOnInit() {
 
     this.postService.getPosts().subscribe(posts => {
-        this.posts = posts;
-        
+      this.posts = posts;
+
     });
 
   }
-  toBeAddedPost(post:Post):void{
-      console.log(post);
-      this.posts.unshift(post);
+  onNewPost(post: Post): void {
+    console.log(post);
+    this.posts.unshift(post);
   }
+
+  editPost(post: Post): void {
+    this.currentPost = post;
+    this.isEdit = true;
+  }
+
+  onUpdatedPost(post: Post): void {
+    this.posts.forEach((cur, index) => {
+      if (post.id === cur.id) {
+        this.posts.splice(index, 1);
+        this.posts.unshift(post);
+        this.isEdit = false;
+        this.currentPost = {
+          id: 0,
+          title: '',
+          body: ''
+        }
+      }
+    });
+  }
+
+  deletePost(post: Post) {
+    if (confirm(`are you sure?`)) {
+      this.postService.deletePost(post).subscribe(() => {
+        this.posts = this.posts.filter(obj => {
+          return obj !== post;
+        });
+      });
+    }
+  }
+
+
 
 }

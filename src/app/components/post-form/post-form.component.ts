@@ -1,7 +1,8 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { PostService } from '../../services/post.service';
 
 import { Post } from '../../models/Post';
+import { post } from 'selenium-webdriver/http';
 
 
 @Component({
@@ -11,25 +12,37 @@ import { Post } from '../../models/Post';
 })
 export class PostFormComponent implements OnInit {
 
-  constructor(private postService:PostService) { }
+  constructor(private postService: PostService) { }
 
-  @Output() sentPost:EventEmitter<Post> =
-            new EventEmitter<Post>();
-
+  @Output() newPost: EventEmitter<Post> =
+    new EventEmitter<Post>();
+  @Output() updatedPost: EventEmitter<Post> =
+    new EventEmitter<Post>();
+  @Input() currentPost: Post;
+  @Input() isEdit: boolean;
   ngOnInit() {
   }
 
-  addPost(title,body){
-    if(!title || !body )
-    {
+  addPost(title, body) {
+    if (!title || !body) {
       alert('Enter your Post');
     }
-    else{
-      this.postService.savePost({title,body} as Post).subscribe(
-        post=>{
-          this.sentPost.emit(post);
+    else {
+      this.postService.savePost({ title, body } as Post).subscribe(
+        post => {
+          this.newPost.emit(post);
         });
     }
+  }
+
+  updatePost() {
+    this.postService.updatePost(this.currentPost).subscribe
+      (post => {
+        console.log(post);
+        this.isEdit = false;
+        this.updatedPost.emit(post);
+      }
+      );
   }
 
 }
